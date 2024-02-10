@@ -1,23 +1,24 @@
-import logo from './logo.svg';
-import './App.css';
+
+import React, { useEffect, useState } from 'react';
+import ScreenComponen from './component/ScreenComponent';
+import TheaterDashboard from './component/TheaterDashboard';
 
 function App() {
+  const[screen,setScreen]=useState();
+
+ const handleScreenDetails=(data)=>{
+  console.log(data);
+   setScreen(data);
+  }
+  useEffect(()=>{
+    console.log("okay")
+console.log(screen)
+  },[screen]);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div >
+  {!screen&& <TheaterDashboard screenDetails={handleScreenDetails}/>}
+   {screen&& <ScreenComponen screen={screen}/> }
+
     </div>
   );
 }

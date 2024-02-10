@@ -1,0 +1,20 @@
+*{
+    padding :0;
+    margin:0;
+    
+
+}
+
+.card{
+    margin-top: 2rem;
+    margin-left: 5rem;
+    background-color: aliceblue;
+    padding-top: 1rem;
+    box-shadow: 0.1rem 0.2rem 0.1rem 0.4rem rgba(0, 0, 0, 0.436);
+    text-transform: uppercase;  
+    cursor: pointer; 
+}
+.card::hover{
+    width: 20rem;
+    height: 22rem;
+}
