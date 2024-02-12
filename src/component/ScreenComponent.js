@@ -17,21 +17,29 @@ const ScreenComponen=(screen)=>{
     a.map((e)=>{
       console.log("id :",e.id)
     })
-
+// const  CardStyle={
+//  background-color:"green;"
+// }
     
 return(
   <div>
     <h1>Screen Component</h1>
-   
+   <div ></div>
+   <ul style={{
+        
+        display: 'flex',
+        gap:'1rem',
+      }}>
    {
     a&&
     a.map((i)=>(
-      <ul>
+      
         <ScreenCardList details={i}/>
-        </ul>
+        
       ))
     
    }
+   </ul>
 </div>
 );
 

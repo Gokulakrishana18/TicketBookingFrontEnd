@@ -5,12 +5,13 @@ const ScreenCardList=({details})=>{
     cursor:'pointer'
     
   }
+  
+  console.log("okay");
 return(
-<div class="screen-container">
-
+ <div class="screen">
   <div class="panel">
     <div class="ring">
-      <div class="screen-card card1"></div>
+      <div class="screen-card"></div>
       <div class="border">
         <p class="title"> SCREEN {details.id}</p>
         <div class="slide">
@@ -27,7 +28,8 @@ return(
       </div>
     </div>
   </div> 
-</div>
+</div> 
+
 
 
   //   <div class="card">
@@ -40,6 +42,7 @@ return(
   //     <a href="#" class="btn btn-primary">Choose the seat</a>
   //   </div>
   // </div>
+ 
 )
 }
  export default ScreenCardList;

@@ -1,13 +1,9 @@
 
   
-  .screen-container {
+  .screen {
     height: 100vh;
     width: 100vw;
-    max-height: 600px;
-    max-width: 1200px;
-    min-height: 600px;
-    min-width: 1100px;
-    display: flex;
+    display:flex;
     justify-content: space-around;
     align-items: center;
     margin: 0 auto;
@@ -18,7 +14,7 @@
     width: 190px;
     position: relative;
   
-    &:hover {
+    &&:hover {
       .card {
         filter: blur(5.5px);
       }
@@ -68,9 +64,9 @@
     border: 1px solid rgba(255, 255, 255, 1);
   }
   
-  .card1 {
+  .screen-card {
     background-image: url("https://images.pexels.com/photos/7991318/pexels-photo-7991318.jpeg?cs=srgb&dl=pexels-tima-miroshnichenko-7991318.jpg&fm=jpg");
-    background-repeat: no-repeat;
+   
     background-size: 200% 120%;
   }
 

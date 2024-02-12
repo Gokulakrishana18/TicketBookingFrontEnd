@@ -1,4 +1,6 @@
 import { useState } from 'react';
+
+import { useNavigate,Link } from "react-router-dom";
 import {
   Card,
   CardHeader,
@@ -15,6 +17,10 @@ const TheaterListCard = ({ theaterList, toparent }) => {
     setId(id);
     toparent(id);
   };
+  const history = useNavigate();
+  const screenPage = () => {
+    history.push("/screen")
+}
 
   return (
     <div className="flex flex-wrap justify-center gap-8 bg-black">
@@ -47,11 +53,13 @@ const TheaterListCard = ({ theaterList, toparent }) => {
               veritatis enim culpa nam inventore doloribus quidem temporibus
               amet velit accusamus.
             </p>
+           <Link to={`/screen`}>
             <button
               className="bg-teal-500 px-6 py-2 font-semibold text-white rounded-full absolute -bottom-20 delay-500 duration-1000 group-hover:bottom-20 scale-0 group-hover:scale-125"
             onClick={()=>{getTheId(e.id)}}>
              Book The Ticket
             </button>
+            </Link>
           </div>
         </div>
       </div>
