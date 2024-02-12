@@ -44,6 +44,7 @@ const TheaterDashboard=({screenDetails})=>{
 
     const keys = ["name", "location"];
       const search = (data) => {
+        console.log();
         return data?.filter((item) =>
           keys.some((key) => item[key].toLowerCase().includes(query))
         )|| data;
