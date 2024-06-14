@@ -1,28 +1,54 @@
+import axios from "axios";
 import React, { useEffect, useState } from "react"
 import ScreenCardList from "./ScreenCardList";
+import '../css/ScreenListCars.css';
+import { getAuditorium } from '../services/TicketBookingService'
 
-const ScreenComponen=(screen)=>{
-    const {screenDetails}= screen;
+const ScreenComponen=({screen})=>{
+    const [screenDetails,SetscreenDetails]= useState([]);
+    console.log(screen)
     const[a,setA]=useState();
     useEffect(()=>{
-        const {screenDetails}= screen;
-        Object.entries(screen).map(([key,value])=>{
-         {value&& setA(value)}
-          })
+      // axios.get(`http://localhost:8080/api/ticketBooking/auditoriums/${screen}/`).
+      const theaterId = localStorage.getItem("TheaterId");
+     console.log(theaterId);
+      getAuditorium(theaterId).
+      then(response=>{
+        SetscreenDetails(response.data);
+        console.log(response);
+      })
+      .catch(error=>{
+        console.error("error:",error);
+      }); 
+       console.log(screenDetails) 
+
+},[])
+
+const getTheId=(e)=>{
+  console.log("get the id");
+  console.log(e);
+}
+// console.log(getAuditoriumId);
+
+    // useEffect(()=>{
+    //     const {screenDetails}= screen;
+    //     Object.entries(screen).map(([key,value])=>{
+    //      {value&& setA(value)}
+    //       })
       
-    },[])
+    // },[])
     console.log("okay");
 
-    a &&
-    a.map((e)=>{
-      console.log("id :",e.id)
-    })
+    // a &&
+    // a.map((e)=>{
+    //   console.log("id :",e.id)
+    // })
 // const  CardStyle={
 //  background-color:"green;"
 // }
     
 return(
-  <div>
+  <div className="Screen-dashboard">
     <h1>Screen Component</h1>
    <div ></div>
    <ul style={{
@@ -31,13 +57,9 @@ return(
         gap:'1rem',
       }}>
    {
-    a&&
-    a.map((i)=>(
-      
-        <ScreenCardList details={i}/>
-        
-      ))
-    
+    screenDetails?.map((e)=>(
+      <ScreenCardList key={e.id} details={e} getAuditoriumId={getTheId}/>
+    ))
    }
    </ul>
 </div>

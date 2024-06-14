@@ -4,6 +4,10 @@
     
 
 }
+.theaterDashboard-container{
+    background-color: black;
+    justify-items: center;
+}
 
 .card{
     margin-top: 2rem;
@@ -18,3 +22,10 @@
     width: 20rem;
     height: 22rem;
 }
+
+  
+ 
+
+  
+
+  

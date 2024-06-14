@@ -1,10 +1,18 @@
-import '../css/ScreenListCars.css'
-const ScreenCardList=({details})=>{
+import {useEffect, useState} from 'react';
+import '../css/ScreenListCars.css';
+import {Link} from 'react-router-dom';
+
+const ScreenCardList=({details,getAuditoriumId})=>{
+  const[auditoriumId,setAuditoriumId]=useState();
   const btnStyle ={
     color:'white',
     cursor:'pointer'
     
   }
+
+ 
+
+
   
   console.log("okay");
 return(
@@ -22,7 +30,9 @@ return(
           </div>
           <div class="line">
             <h6 class="para">CHOOSE SEAT</h6> <i class="fa fa-plane" aria-hidden="true"></i>
-            <button class="para-button">CLICK</button>
+            <Link to="/booking">
+            <button class="para-button" onClick={()=>{localStorage.setItem("screenId",details.id)}}>CLICK</button>
+            </Link>
           </div>
         </div>
       </div>

@@ -2,40 +2,56 @@
 import React, { useEffect, useState } from 'react';
 import ScreenComponen from './component/ScreenComponent';
 import TheaterDashboard from './component/TheaterDashboard';
+import {getAuthentication} from './services/AuthService'
 import {
   BrowserRouter as Router,
   Switch,
   Route,
   Link,
-  Routes
+  Routes,
+  Navigate
 } from "react-router-dom";
+import SeatComponent from './component/SeatComponent';
+import LoginComponent from './component/LoginComponent';
+import ReigsterComponent from './component/ReigsterComponent';
 
 function App() {
-  const [screen, setScreen] = useState();
-
+  const [theaterId, setTheater] = useState();
+  const[auditoriumId,setAuditoriumId] = useState();
   const handleScreenDetails = (data) => {
     console.log(data);
-    setScreen(data);
-    return screen;
+    setTheater(data);
+    
+  }
+  const passTheAuditoriumID=(e)=>{
+console.log(e);
+setAuditoriumId(e);
   }
 
-  useEffect(() => {
-    console.log("okay")
-    console.log(screen)
-  }, [screen]);
+
+console.log(getAuthentication);
 
   return (
 
     <Routes>
       <Route
+path="/register"
+element={<ReigsterComponent/>}>
+</Route>
 
-        path="/"
-        element={ <TheaterDashboard screenDetails={handleScreenDetails} />}
+
+<Route path='/login' element = { <LoginComponent /> }></Route>
+      <Route
+        path="/theater"
+        element={getAuthentication()?<TheaterDashboard  />: <Navigate to="/login"/>}
       />
       <Route
         path="/screen"
-        element={ <ScreenComponen screen={handleScreenDetails} />}
+        element={ <ScreenComponen screen={theaterId} getAuditoriumId={passTheAuditoriumID} />}
       />
+      <Route 
+      path="/booking"
+      element={<SeatComponent theater={theaterId} auditoriumId={auditoriumId}/>}/>
 
 
 

@@ -1,4 +1,8 @@
-
+.Screen-dashboard{
+  background-color: black;
+  width: 100%;
+  height: 100vh;
+}
   
   .screen {
     height: 100vh;
@@ -7,6 +11,7 @@
     justify-content: space-around;
     align-items: center;
     margin: 0 auto;
+    background-color: black;
   }
   
   .panel {
