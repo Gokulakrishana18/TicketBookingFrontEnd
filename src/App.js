@@ -29,7 +29,7 @@ setAuditoriumId(e);
   }
 
 
-console.log(getAuthentication);
+console.log(getAuthentication.name.toLowerCase);
 
   return (
 
@@ -43,8 +43,10 @@ element={<ReigsterComponent/>}>
 <Route path='/login' element = { <LoginComponent /> }></Route>
       <Route
         path="/theater"
-        element={getAuthentication()?<TheaterDashboard  />: <Navigate to="/login"/>}
-      />
+      element={  <TheaterDashboard  />}  
+
+      // element={getAuthentication()?<TheaterDashboard  />: <Navigate to="/login"/>}
+       />
       <Route
         path="/screen"
         element={ <ScreenComponen screen={theaterId} getAuditoriumId={passTheAuditoriumID} />}

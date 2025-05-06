@@ -1,182 +1,168 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
-import '../css/BookingSeat.css'
+import '../css/BookingSeat.css';
 import ListOfSeat from "./ListOfSeat";
-import { getSeat ,seatBooking} from '../services/TicketBookingService';
-import { getToken,getUserName } from "../services/AuthService";
+import { getSeat, seatBooking } from '../services/TicketBookingService';
+import { getToken, getUserName } from "../services/AuthService";
 
 const SeatComponent = () => {
-    const[seatDetails,setSeatDetails]=useState();
-    const[seatPrice,setSeatPrice] = useState(0);
-    const[seatCount,setSeatCount] = useState(0);
-    const[selectedSeat,setSelectedSeat]= useState([]);
-    const[isBookedMessage,setIsBookedMessage] = useState();
-    const[responseCode,setResponseCode]= useState();
-    const[ user_email,setUserEmail]=useState();
-    const[seat,setSeatId]=useState();
-    const[choosedSeat,setChoosedSeat] = useState([]);
-    const[a,setA]=useState();
-   const userName = localStorage.getItem("user_email");
-   useEffect(()=>{
-const screenID = localStorage.getItem("screenId");
-getSeat(screenID).
-  then(response=>{
-     setSeatDetails(response.data);
-    console.log(response.data);
-  })
-  .catch(error=>{
-    console.error("error:",error);
-  });
-   },[]) ;
-//    console.log(choosedSeat);
-
-   const getTheSeatPrice=(e)=>{
-    const user_email=userName;
-    const seat = e.id;
-    // console.log("seat price for this Seat :",e.price);
-    const existingIndex = selectedSeat.findIndex(item=>item.id==e.id); 
+    const [seatDetails, setSeatDetails] = useState([]);
+    const [seatPrice, setSeatPrice] = useState(0);
+    const [seatCount, setSeatCount] = useState(0);
+    const [selectedSeat, setSelectedSeat] = useState([]);
+    const [isBookedMessage, setIsBookedMessage] = useState('');
+    const [responseCode, setResponseCode] = useState('');
+    const [userEmail, setUserEmail] = useState('');
+    const [seatId, setSeatId] = useState();
+    const [choosedSeat, setChoosedSeat] = useState([]);
     
-    const existingSeat = choosedSeat.findIndex(item=>item.seat==e.id); 
-    console.log(a);
-    console.log("seatAndUser",existingSeat);
-    console.log("User",existingIndex);
-    if(existingIndex!==-1 ){
-    console.log("something work");
-     const filteredList = selectedSeat.filter(item=>item.id!=e.id);
-     const filteredUserList = choosedSeat.filter(item=>item.seat!=e.id);
-     choosedSeat.map((item)=>(
-      console.log("seat :",item.seat,"Id :",e.id)
-     ))
-     setChoosedSeat(filteredUserList);
-    setSeatPrice(seatPrice-e.price);
-setSeatCount(seatCount-1);
-setSelectedSeat(filteredList);
-// console.log(seatPrice);
- }
- else{
-    // console.log("Inside the else part");
-     const userAndSeat =[...choosedSeat,{seat,user_email}] 
-     setChoosedSeat(userAndSeat);
-     const markAsBooked ={...e,booked:true}
-     const seats = [...selectedSeat,markAsBooked];
-    setSeatPrice (seatPrice+e.price);
-    setSeatId(e.id);
-//    setChoosedSeat(userAndSeat);
-    setSelectedSeat(seats);
-    setSeatCount(seatCount+1);
-    // console.log(seatPrice)
-    // console.log(selectedSeat);
-    console.log(choosedSeat);
- }
- 
+    const userName = localStorage.getItem("user_email");
 
-   }
- const decerseTheSeatPrice=(price)=>{
-    console.log("seat price for this Seat :",price);
-    setSeatPrice (seatPrice-price)
- }
-
- const confirmTicket=(e)=>{
-  
-    if(selectedSeat.length==0){
-        alert("Ple choose the seat...")
-    }
-    else{
-        try{
-
-             const response =  fetch('http://localhost:8080/api/ticketBooking/booktheTicket',{
-               method : 'POST',
-            
-              headers :{
-                'Content-Type':'application/json',
-                 'Authorization': getToken(),
-              } ,
-              body :JSON.stringify(choosedSeat)
-            }
-            )
-            .then((e)=>{
-                if(e.status==200){
-                    setIsBookedMessage("Booked successFully");
-                               }
-                               else{
-                                   setIsBookedMessage("Something went wrong ple book after some time");
-                               }
+    useEffect(() => {
+        const screenID = localStorage.getItem("screenId");
+        getSeat(screenID)
+            .then(response => {
+                setSeatDetails(response.data);
+                console.log(response.data);
+            })
+            .catch(error => {
+                console.error("Error:", error);
             });
-        }
-        catch(error){
-                   console.log('Error :',e);
-        }
-      
-    }
- }
+    }, []);
 
-const referceThePage=()=>{
-    setSeatPrice(0);
-    setSeatCount(0);
-    setSelectedSeat([]);
-    setChoosedSeat([]);
+    // Handle seat price change
+    const getTheSeatPrice = (e) => {
+        const seat = e.id;
+        const user_email = userName;
+        const existingIndex = selectedSeat.findIndex(item => item.id === e.id); 
+        const existingSeat = choosedSeat.findIndex(item => item.seat === e.id); 
 
-}
-useEffect(()=>{   },[selectedSeat,seatPrice]);
-   
-   
-   return (
-   <div className="Bookingpage">
+        if (existingIndex !== -1) {
+            const filteredList = selectedSeat.filter(item => item.id !== e.id);
+            const filteredUserList = choosedSeat.filter(item => item.seat !== e.id);
+            setChoosedSeat(filteredUserList);
+            setSeatPrice(seatPrice - e.price);
+            setSeatCount(seatCount - 1);
+            setSelectedSeat(filteredList);
+        } else {
+            const userAndSeat = [...choosedSeat, { 
+                seat: e.id, 
+                user_email, 
+                seatNumber: e.seatNumber, 
+                seatPrice: e.price, 
+                seatType: e.seatType 
+            }];
+            setChoosedSeat(userAndSeat);
+            const markAsBooked = { ...e, booked: true };
+            const seats = [...selectedSeat, markAsBooked];
+            setSeatPrice(seatPrice + e.price);
+            setSeatId(seat);
+            setSelectedSeat(seats);
+            setSeatCount(seatCount + 1);
+        }
+    };
+
+    // Confirm ticket booking
+    const confirmTicket = () => {
+        // Check if any seat is selected
+        if (selectedSeat.length === 0) {
+            alert("Please choose a seat...");
+            return;  // Early exit if no seats are selected
+        }
+
+        // Prepare the data to be sent to the backend
+        const seatsToBook = choosedSeat.map(seat => {
+            return {
+                id: seat.seat,  // The ID of the selected seat
+                seatNumber: seat.seatNumber,  // Seat number
+                isBooked: true,  // Mark as booked
+                seatType: seat.seatType,  // Seat type (e.g., VIP, Regular)
+                seatPrice: seat.seatPrice  // Seat price
+            };
+        });
+
+        // Log the data to be sent to the backend for debugging purposes
+        console.log("Seats to be booked:", seatsToBook);
+
+        // Send the booking data to the backend
+        fetch('http://localhost:8080/api/ticketBooking/bookingSeat', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': getToken(),  // Assuming getToken() returns the auth token
+            },
+            body: JSON.stringify(seatsToBook),  // Send the structured seat data
+        })
+        .then(response => response.text())   // Parse the response as JSON
+        .then(data => {
+            console.log("Backend response:", data); 
+            if (data.includes("Success")) {
+                setIsBookedMessage("Booked successfully!");
+            } else {
+                setIsBookedMessage("Something went wrong. Please try booking after some time.");
+            }
+        })
+        .catch(error => {
+            console.error('Error booking the ticket:', error);
+            setIsBookedMessage("An error occurred while booking. Please try again.");
+        });
+    };
+
+    // Reset the page
+    const referceThePage = () => {
+        setSeatPrice(0);
+        setSeatCount(0);
+        setSelectedSeat([]);
+        setChoosedSeat([]);
+    };
+
+    useEffect(() => {}, [selectedSeat, seatPrice]);
+
+    return (
+        <div className="Bookingpage">
             <div className="booking-container">
-              <button style={{backgroundcolor:'green'}}>&times; </button>
+                <button style={{ backgroundColor: 'green' }}>&times;</button>
                 <ul className="showcase">
                     <li>
-                        <div className="seat">
-                        </div>
+                        <div className="seat"></div>
                         <small>NA</small>
                     </li>
                     <li>
-                        <div className="seat selected">
-
-                        </div>
+                        <div className="seat selected"></div>
                         <small>Selected</small>
                     </li>
                     <li>
-                        <div className="seat occupied">
-
-                        </div>
-                        {/* windows+.  for emoji*/}n
+                        <div className="seat occupied"></div>
                         <small>Occupied🪑🪑🪑</small>
                     </li>
                 </ul>
-               <div className="booking-row-container">
+                <div className="booking-row-container">
                     <div className="booking-screen"></div>
                     <div className="booking-row">
-                        {seatDetails?.map((e)=>(
-                          <ListOfSeat key={e.id}seat={e} getTheSeatPrice={getTheSeatPrice} 
-                          decerseTheSeatPrice={decerseTheSeatPrice}
-                         
-                          />
+                        {seatDetails?.map((e) => (
+                            <ListOfSeat 
+                                key={e.id} 
+                                seat={e} 
+                                getTheSeatPrice={getTheSeatPrice} 
+                            />
                         ))}
                     </div>
-                   
                 </div>
                 <div className="Price">
                     <p>
-                        You have selected <span id="count">{seatCount}</span> seats for a price of $<span
-                     >{seatPrice}</span
-                        >
-
+                        You have selected <span id="count">{seatCount}</span> seats for a price of $
+                        <span>{seatPrice}</span>
                     </p>
                 </div>
-               { isBookedMessage && <p>{isBookedMessage}</p>}
-                <button className='btn btn-primary' onClick={(e)=>{confirmTicket(e)}}>
-        Confirm the ticket
-    </button>
-            <button className="btn btn-danger" onClick={(e)=>{referceThePage(e)}}>cancle</button>
+                {isBookedMessage && <p>{isBookedMessage}</p>}
+                <button className='btn btn-primary' onClick={confirmTicket}>
+                    Confirm the ticket
+                </button>
+                <button className="btn btn-danger" onClick={referceThePage}>
+                    Cancel
+                </button>
             </div>
         </div>
-
-
-
     );
-}
+};
+
 export default SeatComponent;
-
-
-{/* after here i want to selected seat to back end and save this data into backed */}

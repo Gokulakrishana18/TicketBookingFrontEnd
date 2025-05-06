@@ -1,189 +1,99 @@
-import React, { useState } from 'react'
-import { loginAPICall, saveLoggedInUser, storeToken,userName,isAuthentication } from '../services/AuthService';
-import { useNavigate,Link } from "react-router-dom";
+import React, { useState } from 'react';
+import { storeToken, userName, isAuthentication } from '../services/AuthService';
+import { useNavigate } from "react-router-dom";
+import '../css/loginpage.css';
 
-import '../css/loginpage.css'
 const LoginComponent = () => {
 
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-    const[responseCode,setResponseCode]=useState();
-    const[user,setUser]=useState();
-   
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const navigator = useNavigate();
 
-    const navigator = useNavigate();
-    // setUser(username,password);
+  const handleLoginForm = async (e) => {
+    e.preventDefault();
 
-     function handleLoginForm(e){ 
-console.log("Email :",email)
-console.log("Password :", password)
-        e.preventDefault();
-      
-        try{
+    console.log("Email:", email);
+    console.log("Password:", password);
 
-            const response =  fetch('http://localhost:8080/user',{
-              method : 'POST',
-              headers :{
-                'Content-Type':'application/json'
-              } ,
-              body :JSON.stringify({email,password})
-            }).then((e)=>{
-               // setResponseCode(e.status)
-                if(e.status==200){
-                  const token = 'Basic ' + window.btoa(email + ":" + password);
-                  storeToken(token);
-                  const isCheck = true;
-                  isAuthentication(true);
-                  const user_email = email;
-                  userName(user_email);
-                  navigator(`/theater`)
-                }
-                else{
-                  console.log(e)
-                  console.log("something wrong");
-                }
-            });
-          }
-        
-          catch(error){
-                     console.log('Error :',e);
-          }
+    try {
+      const response = await fetch('http://localhost:8080/user', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email, password })
+      });
 
-//             if(responseCode==200){
-//                 const token = 'Basic ' + window.btoa(email + ":" + password);
-//                 const user_email = email;
-//                 userName(user_email);
-//                 navigator(`/theater`)
-//                   storeToken(token);
-//                 // <Link to={`/theater`}></Link>
-// console.log("okay")
-            
+      if (response.status === 200) {
+        console.log('Login Successful');
+        const token = 'Basic ' + window.btoa(email + ":" + password);
 
-          //   else{
-          //       // setIsBookedMessage("Something went wrong ple book after some time");
-          // console.log("not okay");
-          //   }
-       
-      
+        storeToken(token);
+        isAuthentication(true);
+        userName(email);
 
-        // await loginAPICall(username, password).then((response) => {
-        //     console.log(response.data);
+        navigator('/theater'); // redirect after login
+      } else {
+        console.log('Login Failed. Status:', response.status);
+        alert('Invalid Credentials!');
+      }
 
-        //     const token = 'Basic ' + window.btoa(username + ":" + password);
-        //     storeToken(token);
-
-        //     saveLoggedInUser(username);
-        //     navigator("/todos")
-
-        //     window.location.reload(false);
-        // }).catch(error => {
-        //     console.error(error);
-        // })
-
+    } catch (error) {
+      console.error('Login Error:', error);
     }
-  
+  };
 
-    function handleregister(){
-      navigator(`/register/`)
-    }
+  const handleRegisterRedirect = () => {
+    navigator('/register');
+  };
 
   return (
-   
-    // <div className='container1'>
-    //     <br /> <br />
-    //     <div className='row'>
-    //         <div className='col-md-6 offset-md-3'>
-    //             <div className='card'>
-    //                 <div className='card-header'>
-    //                     <h2 className='text-center'> Login Form </h2>
-    //                 </div>
+    <div className='loginPage-container'>
+      <div className='heading'>Sign In</div>
+      <form className='form' onSubmit={handleLoginForm}>
+        
+        <input
+          required
+          className="input"
+          type="email"
+          name="email"
+          id="email"
+          placeholder="E-mail"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
 
-    //                 <div className='card-body'>
-    //                     <form>
+        <input
+          required
+          className="input"
+          type="password"
+          name="password"
+          id="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
 
-    //                         <div className='row mb-3'>
-    //                             <label className='col-md-3 control-label'> Username or Email</label>
-    //                             <div className='col-md-9'>
-    //                                 <input
-    //                                     type='text'
-    //                                     name='username'
-    //                                     className='form-control'
-    //                                     placeholder='Enter username'
-    //                                     value={email}
-    //                                     onChange={ (e) => setEmail(e.target.value)}
-    //                                 >
+        <span className="forgot-password">
+          <a href="#">Forgot Password?</a>
+        </span>
 
-    //                                 </input>
-    //                             </div>
-    //                         </div>
+        <input
+          className="login-button"
+          type="submit"
+          value="Sign In"
+        />
 
-    //                         <div className='row mb-3'>
-    //                             <label className='col-md-3 control-label'> Password </label>
-    //                             <div className='col-md-9'>
-    //                                 <input
-    //                                     type='password'
-    //                                     name='password'
-    //                                     className='form-control'
-    //                                     placeholder='Enter password'
-    //                                     value={password}
-    //                                     onChange={ (e) => setPassword(e.target.value)}
-    //                                 >
-    //                                 </input>
-    //                             </div>
-    //                         </div>
+      </form>
 
-    //                         <div className='form-group mb-3'>
-    //                             <button className='btn btn-primary'onClick={ (e) => handleLoginForm(e)}>Submit</button>
-
-    //                         </div>
-    //                     </form>
-
-    //                 </div>
-
-    //             </div>
-    //         </div>
-    //     </div>
-    //     </div>
-      
-            <div className='loginPage-container'>
-
-            <div className='heading'>Sign In</div>
-            <form className='form'>
-                <input />
-      <input required="" className="input" 
-      type="email" 
-      name="email" 
-      id="email"
-       placeholder="E-mail"
-      value={email}
-      onChange={ (e) => setEmail(e.target.value)}
-      /> 
-      <input required="" 
-      className="input"
-       type="password" 
-       name="password" 
-       id="password" 
-       placeholder="Password"
-       value={password}
-   onChange={ (e) => setPassword(e.target.value)}
-       />
-      <span className="forgot-password"><a href="#">Forgot Password ?</a></span>
-       <input className="login-button" type="submit" value="Sign In"
-       onClick={ (e) => handleLoginForm(e)}
-       />
-     </form>
-     <div>
-     <p>If you don't have a account ple register</p>
-     <input className="register-button" type="submit" value="Sign Up"
-       onClick={ (e) => handleregister(e)}
-       />   
-     </div>
-     
-            </div>
-
-     
- 
-  )
-}
+      <div>
+        <p>If you don't have an account, please register</p>
+        <button className="register-button" onClick={handleRegisterRedirect}>
+          Sign Up
+        </button>
+      </div>
+    </div>
+  );
+};
 
 export default LoginComponent;
